@@ -6,15 +6,22 @@ db = cluster["AnchorChallenger"]
 collection = db["user"]
 
 def insert(user, email, password):
-    # unique index in mongodb collection
-    collection.insert_one({"username": user, "email": email, "password": password})
-    return True
-
+    try :
+        # unique index in mongodb collection
+        collection.insert_one({"username": user, "email": email, "password": password})
+        return True
+    except Exception as e:
+        print (e)
+        return False
 
 def get(user, password):
-    # unique index in mongodb collection
-    valor = collection.find_one({"username": user, "password": password})
-    return valor
+    try:
+        # unique index in mongodb collection
+        valor = collection.find_one({"username": user, "password": password})
+        return valor
+    except Exception as e:
+        print ("huasdhu")
+        return None
 
 
 

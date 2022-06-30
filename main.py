@@ -34,10 +34,6 @@ def token_required(f):
 def ping():
     return 'pong!'
 
-@app.route('/var')
-def var():
-    return config.s3_host
-
 @app.route('/register',methods = ['POST'])
 def register():
     content = request.json
@@ -51,7 +47,7 @@ def login():
     content = request.json
     response = user.login(content)
     if not response : return "Login:Password not fount", 404
-    return user.login(content)
+    return response
 
 @app.route('/validatejwt',methods = ['GET'])
 @token_required

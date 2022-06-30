@@ -3,14 +3,22 @@ from api import config
 from api.model import user_model
 
 def register(payload):
-    user_model.insert(payload["login"], payload["email"], payload["password"])
-    return True
+    try:
+        return user_model.insert(payload["login"], payload["email"], payload["password"])
+    except Exception as e:
+        # Some Log, in this case i'll use only print to log in my console
+        print (e)
+        return False
 
 def login(payload):
-    temp = user_model.get(payload["login"], payload["password"])
-    if (temp == None) : return None
-    token = jwt.encode(
-        payload=payload,
-        key=config.jwt_token
-    )
-    return token
+    try:
+        user = user_model.get(payload["login"], payload["password"])
+        if (user != None):
+            return jwt.encode(
+                payload=payload,
+                key=config.jwt_token
+            )
+    except Exception as e:
+        # Some Log, in this case i'll use only print to log in my console
+        print (e)
+    return None
