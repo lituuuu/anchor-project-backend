@@ -13,7 +13,7 @@ def register(payload):
 def login(payload):
     try:
         user = user_model.get(payload["login"], payload["password"])
-        if (user != None):
+        if user:
             return jwt.encode(
                 payload=payload,
                 key=config.jwt_token

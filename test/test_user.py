@@ -1,4 +1,4 @@
-from tests.mock import user_mock
+from test.mock import user_mock
 from api import user
 
 def test_register_success(mocker):
