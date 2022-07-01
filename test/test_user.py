@@ -1,39 +1,44 @@
 from test.mock import user_mock
 from api import user
+import pytest
 
 def test_register_success(mocker):
+    json = {'username': 'my_test', 'email': 'my_test', 'password': 'my_test'}
     mocker.patch(
-        'api.model.user_model.insert',
-        return_value=user_mock.user_mock_insert
+        'api.db.user.User.insert',
+        return_value=user_mock.user_mock_insert(json)
     )
-    variavel = json={'login': 'teste', 'email': 'teste@teste.teste', 'password': 'teste'}
-    temp = user.register(variavel)
-    assert temp == True
+    test_class = user.register(json)
+    assert test_class.username == "my_test"
 
 def test_register_error(mocker):
-    mocker.patch(
-        'api.model.user_model.insert',
-        return_value=False
-    )
-    variavel = json={'login': 'teste', 'email': 'teste@teste.teste', 'password': 'teste'}
-    temp = user.register(variavel)
-    assert temp == False
+    with pytest.raises(Exception):
+        json = {'username': 'my_test', 'email': 'my_test', 'password': 'my_test'}
+        mocker.patch(
+            'api.db.user.User.insert',
+            return_value=user_mock.internal_server_error()
+        )
+        user.register(json)
 
 def test_login_success(mocker):
+    json = {'username': 'my_test', 'email': 'my_test', 'password': 'my_test'}
     mocker.patch(
-        'api.model.user_model.get',
-        return_value=user_mock.user_mock_get
+        'api.db.user.User.get_by_username_and_password',
+        return_value=user_mock.user_mock_get(json)
     )
-    variavel = json={'login': 'teste', 'email': 'teste@teste', 'password': 'teste'}
-    temp = user.login(variavel)
-    assert temp == user_mock.user_encode_jwt
+    test_class = user.login(json)
+    assert test_class.decode('UTF-8') == user_mock.user_encode_jwt
 
 def test_login_error(mocker):
-    mocker.patch(
-        'api.model.user_model.get',
-        return_value=user_mock.user_mock_get_error
-    )
-    variavel = json={'login': 'teste', 'email': 'teste@teste', 'password': 'teste'}
-    temp = user.login(variavel)
-    assert temp == None
+    with pytest.raises(Exception):
+        json = {'username': 'my_test', 'email': 'my_test', 'password': 'my_test'}
+        mocker.patch(
+            'api.db.user.User.get_by_username_and_password',
+            return_value=user_mock.not_found_error()
+        )
+        user.login(json)
+
+
+
+
 

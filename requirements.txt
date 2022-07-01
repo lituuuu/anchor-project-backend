@@ -3,3 +3,4 @@ Flask==2.1.2
 Flask-Cors==3.0.10
 PyJWT==1.7.1
 pymongo==4.1.1
+flask-mongoengine==1.0.0

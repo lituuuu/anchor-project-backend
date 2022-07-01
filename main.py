@@ -1,12 +1,17 @@
 # Imports
-from flask import Flask, redirect, url_for, request, jsonify
-from flask_cors import CORS, cross_origin
-from api import config, user
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from api import user, response_status
+from api.db import initialize_db
 import jwt
 from functools import wraps
+from api.config import Config
+
 
 app = Flask(__name__)
 CORS(app)
+app.config.from_object(Config)
+initialize_db(app)
 
 def token_required(f):
     @wraps(f)
@@ -15,17 +20,15 @@ def token_required(f):
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
         if not token:
-            return jsonify({'message': 'Token is missing !!'}), 401
+            return jsonify({'message': 'Token is missing !!'}), response_status.STATUS_UNAUTHORIZED
 
         try:
-            data = jwt.decode(token, config.jwt_token, algorithms=["HS256"])
-            current_user = None#User.query \
-                #.filter_by(public_id=data['public_id']) \
-                #.first()
+            data = jwt.decode(token, Config.JWT_TOKEN, algorithms=["HS256"])
+            current_user = user.login(data)
         except Exception as e:
             return jsonify({
-                'message': e
-            }), 401
+                'message': str(e)
+            }), response_status.STATUS_UNAUTHORIZED
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -37,22 +40,26 @@ def ping():
 @app.route('/register',methods = ['POST'])
 def register():
     content = request.json
-    if user.register(content):
-        return jsonify({"name": "ok"})
-
-    return "Registration failed", 500
+    try:
+        registered_user = user.register(content)
+        return jsonify(registered_user), response_status.STATUS_CREATED
+    except Exception as e:
+        return jsonify({"message": e.message}), e.status
 
 @app.route('/login',methods = ['POST'])
 def login():
     content = request.json
-    response = user.login(content)
-    if not response : return "Login:Password not fount", 404
-    return response
+    try:
+        user_token = user.login(content)
+        return jsonify({"token": user_token.decode('UTF-8')}), response_status.STATUS_OK
+    except Exception as e:
+        return jsonify({"message": e.message}), e.status
+
 
 @app.route('/validatejwt',methods = ['GET'])
 @token_required
 def validatejwt(self):
-    return "", 200
+    return jsonify({"status":  "this token is valid!"}), response_status.STATUS_OK
 
 if __name__ == '__main__':
     app.run()

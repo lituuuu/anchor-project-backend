@@ -1,24 +1,23 @@
 import jwt
-from api import config
-from api.model import user_model
+from api.config import Config
+from api.db.user import User
 
 def register(payload):
     try:
-        return user_model.insert(payload["login"], payload["email"], payload["password"])
+        user = User(**payload).insert()
+        user.password = "-"
+        return user
     except Exception as e:
-        # Some Log, in this case i'll use only print to log in my console
-        print (e)
-        return False
+        raise e
 
 def login(payload):
     try:
-        user = user_model.get(payload["login"], payload["password"])
-        if user:
+        user = User(**payload)
+        user_login = User.get_by_username_and_password(user.username, user.password)
+        if user_login:
             return jwt.encode(
                 payload=payload,
-                key=config.jwt_token
+                key=Config.JWT_TOKEN
             )
     except Exception as e:
-        # Some Log, in this case i'll use only print to log in my console
-        print (e)
-    return None
+        raise e
