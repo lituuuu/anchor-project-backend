@@ -18,3 +18,6 @@ class CustomErrors(Exception):
     @staticmethod
     def InternalServer(mesage):
         return CustomErrors(mesage, response_status.STATUS_INTERNAL_ERROR)
+
+    def Unauthorized(mesage):
+        return CustomErrors(mesage, response_status.STATUS_UNAUTHORIZED)
