@@ -43,7 +43,9 @@ def insert(payload):
 
 def confirm(payload):
     try:
-        photo = Gallery(**payload).confirm()
+        photo = Gallery(**payload)
+        photo.confirm()
+        photo.pendent = False
         return photo
     except Exception as e:
         raise e
