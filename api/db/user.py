@@ -28,6 +28,6 @@ class User(db.Document):
     @staticmethod
     def get_admin():
         try:
-            return User.objects.get(admin=True)
+            return User.objects.filter(admin=True)
         except DoesNotExist as e:
             raise CustomErrors.NotFound("Not exists admin")
