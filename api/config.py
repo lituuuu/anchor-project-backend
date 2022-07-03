@@ -8,4 +8,7 @@ class Config(object):
     AWS_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME", "anchorproject")
     AWS_S3_HOST = os.environ.get("AWS_S3_HOST", "https://s3.amazonaws.com")
 
+    QUERY_LIMIT_DEFAULT = 10
+    QUERY_PAGE_DEFAULT = 0
+
 

@@ -1,29 +1,35 @@
 from api.db.gallery import Gallery
 
-def get_all_photos():
+def get_all_photos(limit, page):
     try:
-        photos = Gallery.get_all_photos()
+        photos = Gallery.get_all_photos(limit, page)
         return photos
     except Exception as e:
         raise e
 
-def get_photos_by_user(user_id):
+def get_by_id(gallery_id):
     try:
-        photos = Gallery.get_user_photos(user_id)
+        return Gallery.get_by_id(gallery_id)
+    except Exception as e:
+        raise e
+
+def get_photos_by_user(user_id, limit, page):
+    try:
+        photos = Gallery.get_user_photos(user_id, limit, page)
         return photos
     except Exception as e:
         raise e
 
-def photos_pendent():
+def photos_pendent(limit, page):
     try:
-        photos = Gallery.get_photos(True)
+        photos = Gallery.get_photos(True, limit, page)
         return photos
     except Exception as e:
         raise e
 
-def photos_confirmed():
+def photos_confirmed(limit, page):
     try:
-        photos = Gallery.get_photos(False)
+        photos = Gallery.get_photos(False, limit, page)
         return photos
     except Exception as e:
         raise e

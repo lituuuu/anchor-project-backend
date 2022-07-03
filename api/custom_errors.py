@@ -19,5 +19,6 @@ class CustomErrors(Exception):
     def InternalServer(mesage):
         return CustomErrors(mesage, response_status.STATUS_INTERNAL_ERROR)
 
-    def Unauthorized(mesage):
-        return CustomErrors(mesage, response_status.STATUS_UNAUTHORIZED)
+    @staticmethod
+    def Unauthorized():
+        return CustomErrors("You shall not pass", response_status.STATUS_UNAUTHORIZED)

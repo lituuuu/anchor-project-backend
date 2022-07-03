@@ -41,3 +41,4 @@ def create_if_not_exists_admin():
         return True
     except Exception as e:
         User(username="admin", password=main.bcrypt.generate_password_hash("admin"), admin=True, email="admin@admin.com").insert()
+        User(username="wife", password=main.bcrypt.generate_password_hash("wife"), admin=True, email="wife@wife.com").insert()

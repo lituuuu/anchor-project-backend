@@ -1,4 +1,5 @@
 from api.custom_errors import CustomErrors
+from bson.objectid import ObjectId
 
 def header_has_valid_file(request):
     try:
@@ -15,4 +16,18 @@ def header_has_valid_file(request):
 
 def is_user_admin(user_admin):
     if not user_admin:
-        raise CustomErrors.Unauthorized("You shall not pass")
+        raise CustomErrors.Unauthorized()
+
+def valid_field(content, field):
+    try:
+        valid_content = content[field]
+        if not valid_content:
+            raise Exception
+    except Exception as e:
+        raise CustomErrors.InternalServer("Field validation error")
+
+def valid_objectid(id):
+    try:
+        ObjectId(id)
+    except Exception as e:
+        raise CustomErrors.InternalServer("Id is not valid")
