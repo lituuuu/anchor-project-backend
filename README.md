@@ -1,8 +1,10 @@
 # anchor-project-backend
 
 This project is a code challenge.
+Before start, needs execute:
+``pip install -r requirements.txt``
 
-
+Python version 3.10.
 
 How to start the API:
 ``make run``
