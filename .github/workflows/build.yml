@@ -16,7 +16,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      JWT_TOKEN: hey_how_lets_go
+      MONGODB_URL: mongo_connect
+      AWS_ACCESS_KEY: aws_access_key
+      AWS_SECRET_KEY: aws_secret_key
+      AWS_S3_BUCKET_NAME: anchorproject
+      AWS_S3_HOST: https://s3.amazonaws.com
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.10
