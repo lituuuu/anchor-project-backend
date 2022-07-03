@@ -6,8 +6,8 @@ from api.db.gallery import Gallery
 import datetime
 
 class Like(db.Document):
-    user_id = db.ReferenceField(User)
-    gallery_id = db.ReferenceField(Gallery)
+    user_id = db.ReferenceField(User,required=True)
+    gallery_id = db.ReferenceField(Gallery,required=True)
     created_at = db.DateTimeField(required=True,default=datetime.datetime.now)
 
     def insert(self):
@@ -16,9 +16,9 @@ class Like(db.Document):
         except ValidationError:
             raise CustomErrors.InternalServer("Needs required fields")
 
-    def remove(self):
+    def remove(user_id, gallery_id):
         try:
-            obj = Like.objects(user_id=self.user_id,gallery_id=self.gallery_id)
+            obj = Like.objects(user_id=user_id,gallery_id=gallery_id)
             obj.delete()
         except ValidationError:
             raise CustomErrors.InternalServer("Needs required fields")

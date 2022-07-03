@@ -6,7 +6,7 @@ from api.db.user import User
 import datetime
 
 class Gallery(db.Document):
-    user_id = db.ReferenceField(User)
+    user_id = db.ReferenceField(User,required=True)
     photo_bucket = db.StringField(required=True, unique=True)
     pendent = db.BooleanField(required=True,default=True)
     created_at = db.DateTimeField(required=True, default=datetime.datetime.now)

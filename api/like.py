@@ -2,13 +2,12 @@ from api.db.like import Like
 
 def like_photo(payload):
     try:
-        like = Like(**payload)
-        has_like = Like.has_like_by_user_and_galery(like.user_id, like.gallery_id)
+        has_like = Like.has_like_by_user_and_galery(payload["user_id"], payload["gallery_id"])
         if has_like:
-            like.remove()
+            Like.remove(payload["user_id"], payload["gallery_id"])
         else:
-            like.insert()
-        return like
+            Like(**payload).insert()
+        return True
     except Exception as e:
         raise e
 
