@@ -1,13 +1,14 @@
 from test.mock import gallery_mock
 from api import gallery
 import pytest
+from api.config import Config
 
 def test_pendent_gallery_success(mocker):
     mocker.patch(
         'api.db.gallery.Gallery.get_photos',
         return_value=gallery_mock.pendent_gallery()
     )
-    test_class = gallery.photos_pendent()
+    test_class = gallery.photos_pendent(Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
     assert test_class == gallery_mock.pendent_gallery()
     assert test_class[0]["pendent"] == "true"
 
@@ -17,14 +18,14 @@ def test_pendent_gallery_error(mocker):
             'api.db.gallery.Gallery.get_photos',
             return_value=gallery_mock.internal_server_error()
         )
-        gallery.photos_pendent()
+        gallery.photos_pendent(Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
 
 def test_confirmed_gallery_success(mocker):
     mocker.patch(
         'api.db.gallery.Gallery.get_photos',
         return_value=gallery_mock.confirmed_gallery()
     )
-    test_class = gallery.photos_confirmed()
+    test_class = gallery.photos_confirmed(Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
     assert test_class == gallery_mock.confirmed_gallery()
     assert test_class[0]["pendent"] == "false"
 
@@ -34,14 +35,14 @@ def test_confirmed_gallery_error(mocker):
             'api.db.gallery.Gallery.get_photos',
             return_value=gallery_mock.internal_server_error()
         )
-        gallery.photos_confirmed()
+        gallery.photos_confirmed(Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
 
 def test_get_all_photos_success(mocker):
     mocker.patch(
         'api.db.gallery.Gallery.get_all_photos',
         return_value=gallery_mock.all_gallery()
     )
-    test_class = gallery.get_all_photos()
+    test_class = gallery.get_all_photos(Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
     assert test_class == gallery_mock.all_gallery()
     assert test_class[0]["pendent"] == "true"
     assert test_class[1]["pendent"] == "false"
@@ -59,7 +60,7 @@ def test_get_photo_by_user_success(mocker):
         'api.db.gallery.Gallery.get_user_photos',
         return_value=gallery_mock.all_gallery()
     )
-    test_class = gallery.get_photos_by_user("62bee943d330b93cb604317d")
+    test_class = gallery.get_photos_by_user("62bee943d330b93cb604317d", Config.QUERY_LIMIT_DEFAULT, Config.QUERY_PAGE_DEFAULT)
     assert test_class == gallery_mock.all_gallery()
     assert test_class[0]["user_id"]["$oid"] == "62bee943d330b93cb604317d"
     assert test_class[0]["user_id"]["$oid"] != "62bee943d330b93cb604317f"
