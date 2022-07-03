@@ -215,7 +215,7 @@ def post_like(self):
         content = request.json
         validation.valid_field(content, "gallery_id")
         content["user_id"] = user.get_logged_user(request)
-        likes = like.like_photo(content["user_id"], content["gallery_id"])
+        likes = like.like_photo(content)
         return jsonify(likes), response_status.STATUS_OK
     except Exception as e:
         return jsonify({"message": e.message}), e.status
