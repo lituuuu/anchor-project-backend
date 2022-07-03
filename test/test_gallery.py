@@ -109,4 +109,22 @@ def test_confirm_error(mocker):
         )
         gallery.insert(json)
 
+def test_remove_success(mocker):
+    json = {'photo_bucket': 'photo_bucket_test', 'pendent': 'true'}
+    mocker.patch(
+        'api.db.gallery.Gallery.remove',
+        return_value=True
+    )
+    test_class = gallery.remove(json)
+    assert test_class == True
+
+def test_remove_error(mocker):
+    with pytest.raises(Exception):
+        json = {'photo_bucket': 'photo_bucket_test', 'pendent': 'true'}
+        mocker.patch(
+            'api.db.gallery.Gallery.remove',
+            return_value=gallery_mock.internal_server_error()
+        )
+        gallery.remove(json)
+
 

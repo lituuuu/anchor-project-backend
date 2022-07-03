@@ -254,6 +254,18 @@ def get_gallery_by_id(id):
     except Exception as e:
         return jsonify({"message": e.message}), e.status
 
+@app.route('/gallery/<id>', methods=['DELETE'])
+@token_required
+def remove_photo(self,id):
+    try:
+        current_user = user.get_logged_user(request)
+        validation.valid_objectid(id)
+        validation.is_user_admin(current_user.admin)
+        gallery.remove(id)
+        return jsonify({"status": "REMOVED"}), response_status.STATUS_OK
+    except Exception as e:
+        return jsonify({"message": e.message}), e.status
+
 #@app.route('/validatejwt',methods = ['GET'])
 @token_required
 def validatejwt(self):

@@ -16,18 +16,6 @@ def test_like_success(mocker):
     )
     like.like_photo(json)
 
-def test_unlike_success(mocker):
-    json = {'user_id': '62c0634858ffd07aecc4178c', 'gallery_id': '62c0634858ffd07aecc4178c'}
-    mocker.patch(
-        'api.db.like.Like.has_like_by_user_and_galery',
-        return_value=False
-    )
-    mocker.patch(
-        'api.db.like.Like.remove',
-        return_value=True
-    )
-    like.like_photo(json)
-
 def test_like_error(mocker):
     with pytest.raises(Exception):
         json = {'gallery_id': '62c0634858ffd07aecc4178c'}

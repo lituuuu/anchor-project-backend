@@ -19,6 +19,16 @@ class Gallery(db.Document):
         except ValidationError:
             raise CustomErrors.InternalServer("Needs required fields")
 
+    def remove(gallery_id):
+        try:
+            obj = Gallery.objects(pk=gallery_id)
+            obj.delete()
+            return True
+        except ValidationError:
+            raise CustomErrors.InternalServer("Needs required fields")
+        except Exception as e:
+            raise CustomErrors.InternalServer(str(e))
+
     def confirm(self):
         try:
             rows = Gallery.objects(id=ObjectId(self.id)).update(pendent=False)

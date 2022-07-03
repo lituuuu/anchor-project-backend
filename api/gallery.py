@@ -50,3 +50,8 @@ def confirm(payload):
     except Exception as e:
         raise e
 
+def remove(gallery_id):
+    try:
+        return Gallery.remove(gallery_id)
+    except Exception as e:
+        raise e
