@@ -5,7 +5,7 @@ import datetime
 
 class User(db.Document):
     username = db.StringField(required=True, unique=True)
-    email = db.StringField(required=True, unique=True)
+    email = db.EmailField(required=True, unique=True)
     password = db.BinaryField(required=True)
     admin = db.BooleanField(required=True, default=False)
     created_at = db.DateTimeField(required=True, default=datetime.datetime.now)
@@ -15,8 +15,8 @@ class User(db.Document):
             return self.save()
         except NotUniqueError:
             raise CustomErrors.InternalServer("The username and email already exists")
-        except ValidationError:
-            raise CustomErrors.InternalServer("Needs required fields")
+        except ValidationError as e:
+            raise CustomErrors.InternalServer(str(e))
 
     @staticmethod
     def get_by_username(username):
@@ -28,6 +28,8 @@ class User(db.Document):
     @staticmethod
     def get_admin():
         try:
-            return User.objects.filter(admin=True)
-        except DoesNotExist as e:
-            raise CustomErrors.NotFound("Not exists admin")
+            count = User.objects.filter(admin=True).count()
+            if count <= 0:
+                raise CustomErrors.NotFound("Not exists admin")
+        except Exception as e:
+            raise e
