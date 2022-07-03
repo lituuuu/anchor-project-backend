@@ -9,6 +9,11 @@ class Like(db.Document):
     user_id = db.ReferenceField(User,required=True)
     gallery_id = db.ReferenceField(Gallery,required=True)
     created_at = db.DateTimeField(required=True,default=datetime.datetime.now)
+    meta = {
+        'indexes': [
+            {'fields': ('user_id', 'gallery_id'), 'unique': True}
+        ]
+    }
 
     def insert(self):
         try:
